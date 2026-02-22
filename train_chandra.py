@@ -317,12 +317,24 @@ def verify_config(model, processor) -> bool:
 # ---------------------------------------------------------------------------
 
 def _detect_format(sample: dict, image_col: str, text_col: str) -> str:
-    """Detect whether a dataset sample is 'finevision' or 'simple'."""
+    """Detect whether a dataset sample is 'finevision' or 'simple'.
+
+    Priority rules:
+    1. If the user's explicit ``image_col`` / ``text_col`` both exist in the
+       sample, always return ``"simple"`` — explicit args override auto-detection.
+       This handles datasets that have *both* ``images``/``texts`` columns AND
+       plain ``image``/``text`` columns (e.g. samaritan-ai/sam_44_mss_*).
+    2. If only ``images`` + ``texts`` exist (no matching simple columns), return
+       ``"finevision"``.
+    3. Otherwise ``"unknown"``.
+    """
     keys = set(sample.keys())
-    if "images" in keys and "texts" in keys:
-        return "finevision"
+    # Explicit column args always win — prevents misdetection on datasets
+    # that happen to have both 'images'/'texts' AND 'image'/'text' columns.
     if image_col in keys and text_col in keys:
         return "simple"
+    if "images" in keys and "texts" in keys:
+        return "finevision"
     return "unknown"
 
 
