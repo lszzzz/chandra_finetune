@@ -49,6 +49,18 @@ Chandra是一个基于Qwen3-VL-8B架构的OCR模型，专为从文档图像中�
 
 ## 3. 构建与命令
 
+### 创建虚拟环境(项目初始化时执行一次)
+```bash
+# macOS/Linux (zsh/bash)
+python -m venv .venv
+```
+
+### 激活虚拟环境
+```bash
+# macOS/Linux (zsh/bash)
+source .venv/bin/activate
+```
+
 ### 安装依赖
 ```bash
 pip install -r requirements.txt
